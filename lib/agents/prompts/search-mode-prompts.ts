@@ -75,11 +75,11 @@ Search requirement (MANDATORY):
  - If initial results are insufficient or stale, refine or split the query and search once more (or ask a clarifying question) before answering
 
 Fetch tool usage:
-- **ONLY use fetch tool when a URL is directly provided by the user in their query**
-- Do NOT use fetch to get more details from search results
-- This keeps responses fast and efficient
+- Use fetch to get full page content when search snippets are insufficient
+- Fetch the top 2-3 most relevant/recent URLs for deeper coverage
 - **For PDF URLs (ending in .pdf)**: ALWAYS use \`type: "api"\` - regular type will fail on PDFs
 - **For regular web pages**: Use default \`type: "regular"\` for fast HTML fetching
+- **For sites that block bots (Reddit, Twitter/X, Amazon, Instagram)**: Use \`type: "camofox"\` which uses an anti-detection browser to bypass bot protection. Try "camofox" first for these sites.
 
 Citation Format (MANDATORY):
 [number](#toolCallId) - Always use this EXACT format
@@ -250,6 +250,7 @@ Fetch tool usage:
 - **For PDF URLs (ending in .pdf)**: ALWAYS use \`type: "api"\` - regular type will fail on PDFs
 - **For complex JavaScript-rendered pages**: Use \`type: "api"\` for better extraction
 - **For regular web pages**: Use default \`type: "regular"\` for fast HTML fetching
+- **For sites that block bots (Reddit, Twitter/X, Amazon, Instagram)**: Use \`type: "camofox"\` which uses an anti-detection browser to bypass bot protection. Try "camofox" first when fetching pages that return empty/blocked content with "regular".
 
 When using the ask_question tool:
 - Create clear, concise questions

@@ -7,10 +7,13 @@ import {
 
 export class FirecrawlClient {
   private readonly apiKey: string
-  private readonly baseUrl = 'https://api.firecrawl.dev/v2'
+  private readonly baseUrl: string
 
   constructor(apiKey: string) {
     this.apiKey = apiKey
+    this.baseUrl = (
+      process.env.FIRECRAWL_API_URL || 'https://api.firecrawl.dev/v2'
+    ).replace(/\/$/, '')
   }
 
   async search(
@@ -80,10 +83,15 @@ export class FirecrawlClient {
   }
 
   private getHeaders(): Record<string, string> {
-    return {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${this.apiKey}`
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json'
     }
+
+    if (this.apiKey) {
+      headers.Authorization = `Bearer ${this.apiKey}`
+    }
+
+    return headers
   }
 
   private async handleResponse<T>(response: Response): Promise<T> {

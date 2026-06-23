@@ -5,10 +5,10 @@
 
 /**
  * Checks if a dedicated "general" search provider is available
- * Currently checks for Brave Search, but can be extended for other providers
+ * Checks for Brave Search or Serper
  */
 export function isGeneralSearchProviderAvailable(): boolean {
-  return !!process.env.BRAVE_SEARCH_API_KEY
+  return !!process.env.BRAVE_SEARCH_API_KEY || !!process.env.SERPER_API_KEY
 }
 
 /**
@@ -17,6 +17,9 @@ export function isGeneralSearchProviderAvailable(): boolean {
 export function getGeneralSearchProviderName(): string {
   if (process.env.BRAVE_SEARCH_API_KEY) {
     return 'Brave Search'
+  }
+  if (process.env.SERPER_API_KEY) {
+    return 'Serper (Google Search)'
   }
   return 'primary provider'
 }
@@ -110,9 +113,12 @@ export function getSearchStrategyGuidance(): string {
  * Gets the appropriate search provider type for "general" searches
  * Returns 'brave' if available, otherwise null to indicate fallback
  */
-export function getGeneralSearchProviderType(): 'brave' | null {
+export function getGeneralSearchProviderType(): 'brave' | 'serper' | null {
   if (process.env.BRAVE_SEARCH_API_KEY) {
     return 'brave'
+  }
+  if (process.env.SERPER_API_KEY) {
+    return 'serper'
   }
   return null
 }

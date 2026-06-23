@@ -7,6 +7,11 @@ import {
 import { BaseSearchProvider } from '@/lib/tools/search/providers/base'
 import { SearchResults } from '@/lib/types'
 
+function getContentLimit(): number {
+  const limit = parseInt(process.env.FIRECRAWL_CONTENT_LIMIT || '8000', 10)
+  return isNaN(limit) ? 8000 : limit
+}
+
 export class FirecrawlSearchProvider extends BaseSearchProvider {
   async search(
     query: string,
@@ -16,9 +21,12 @@ export class FirecrawlSearchProvider extends BaseSearchProvider {
     excludeDomains: string[] = []
   ): Promise<SearchResults> {
     const apiKey = process.env.FIRECRAWL_API_KEY
-    this.validateApiKey(apiKey, 'FIRECRAWL')
+    // Self-hosted may not require API key
+    if (!process.env.FIRECRAWL_API_URL) {
+      this.validateApiKey(apiKey, 'FIRECRAWL')
+    }
 
-    const firecrawl = new FirecrawlClient(apiKey)
+    const firecrawl = new FirecrawlClient(apiKey || '')
 
     const sources: ('web' | 'news' | 'images')[] = ['web']
     if (searchDepth === 'advanced') {
@@ -38,9 +46,11 @@ export class FirecrawlSearchProvider extends BaseSearchProvider {
       ...(response.data?.news || [])
     ]
 
+    const contentLimit = getContentLimit()
+
     const results = resources.map(resource => {
       if ('markdown' in resource) {
-        const markdown = resource.markdown.slice(0, 1000)
+        const markdown = resource.markdown.slice(0, contentLimit)
         return {
           title: resource.title || '',
           url: resource.url,

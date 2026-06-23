@@ -280,6 +280,11 @@ export function ChatPanel({
       )}
       <form
         onSubmit={e => {
+          // Prevent submission while AI is responding
+          if (isLoading) {
+            e.preventDefault()
+            return
+          }
           // Pasted attachments (content cards / URL chips) are sent as
           // structured data parts alongside the instruction text part — no
           // in-band markers. The server maps them to the model prompt.
@@ -535,8 +540,7 @@ export function ChatPanel({
             placeholder={messages.length > 0 ? 'Reply...' : 'Ask anything...'}
             spellCheck={false}
             value={input}
-            disabled={isLoading || isToolInvocationInProgress()}
-            className="resize-none w-full min-h-12 bg-transparent border-0 p-3 md:p-4 text-sm placeholder:text-muted-foreground focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50"
+            className="resize-none w-full min-h-12 bg-transparent border-0 p-3 md:p-4 text-sm placeholder:text-muted-foreground focus-visible:outline-hidden"
             onChange={handleInputChange}
             onPaste={e => {
               const text = e.clipboardData.getData('text')

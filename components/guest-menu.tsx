@@ -1,10 +1,7 @@
 'use client'
 
-import Link from 'next/link'
-
 import {
   IconLink as Link2,
-  IconLogin as LogIn,
   IconPalette as Palette,
   IconSettings as Settings2
 } from '@tabler/icons-react'
@@ -13,8 +10,6 @@ import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
@@ -34,13 +29,6 @@ export default function GuestMenu() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
-        <DropdownMenuItem asChild>
-          <Link href="/auth/login">
-            <LogIn className="size-4" />
-            <span>Sign In</span>
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>
             <Palette className="size-4" />

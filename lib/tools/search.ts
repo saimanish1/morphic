@@ -9,6 +9,7 @@ import {
 import { getBaseUrlString } from '@/lib/utils/url'
 import { logToolPayload } from '@/lib/utils/usage-logging'
 
+import { enrichSearchResults } from './content/enrich-search-results'
 import {
   createSearchProvider,
   DEFAULT_PROVIDER,
@@ -140,6 +141,14 @@ export function createSearchTool(fullModel: string) {
         console.error('Search API error:', error)
         // Re-throw the error to let AI SDK handle it properly
         throw error instanceof Error ? error : new Error('Unknown search error')
+      }
+
+      // Enrich search results with full content scraping if configured
+      try {
+        searchResult = await enrichSearchResults(searchResult)
+      } catch (enrichError) {
+        console.error('Search enrichment error:', enrichError)
+        // Continue with original results if enrichment fails
       }
 
       // No citationMap is attached: it fully duplicated `results`
